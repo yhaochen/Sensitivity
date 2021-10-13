@@ -3,8 +3,8 @@
 rm(list = ls())
 graphics.off()
 library(sensitivity)
-library(lhs)
-library(randtoolbox)
+library(lhs) #Generate Latin Hypercube samples
+library(randtoolbox) #Generate Sobol sequence (Quasi MC)
 #Problem definition: return yes if the product of two numbers >=0.75
 Reliability<-function (X) {
   floor(X[ ,1]*X[ ,2]/0.75)
@@ -35,6 +35,11 @@ X2 <- X[!ind, ]
 X1 <- data.frame(randomLHS(n,2))
 X2 <- data.frame(randomLHS(n,2))
 
+#Plot the scatter plot of the samples
+par(mar=c(4,5.1,1.6,2.1))
+plot(X1$X1[1:10000],X1$X2[1:10000],pch=19,cex=0.1,xlim=c(0,1),ylim=c(0,1),xlab="x1",ylab="x2",cex.lab=2,cex.axis=2)
+title(main = "Quasi MC",cex=2)
+
 #Sobol index with different base sample size
 S1 <- S2 <- rep(NA,100)
 for (i in 1:100){
@@ -50,11 +55,15 @@ plot(seq(n/50,2*n,by=n/50),S1,type="l",lwd=2,xlab="Sample size",ylab="First-orde
 lines(seq(n/50,2*n,by=n/50),S2,lwd=2,col="green")
 abline(h=0.147,lty=2)
 legend("topright",lwd=c(2,2),col = c("red","green"),legend = c("X1","X2"),cex=2,bty="n")
-title(main = "Random MC",cex=2)
+title(main = "LHS",cex=2)
 
 #Morris method (number of model runs = r*(factors+1))
-M <- morris(model = Reliability, factors = 2, r = 100,
-            design = list(type = "oat", levels = 200, grid.jump = 100))
+M <- morris(model = Reliability, factors = 2, r = 500,
+            design = list(type = "oat", levels = 100, grid.jump = 10))
 print(M)
-plot(M)
+#plot(M)
 
+#Plot the scatter plot of the samples
+par(mar=c(4,5.1,1.6,2.1))
+plot(M$X[ ,1],M$X[ ,2],pch=19,cex=1,xlim=c(0,1),ylim=c(0,1),xlab="x1",ylab="x2",cex.lab=2,cex.axis=2)
+title(main = "Morris",cex=2)
