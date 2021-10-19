@@ -17,7 +17,7 @@ polygon(c(0.75,1,rev(x)),c(1,1,rev(0.75/x)),col="red",border = NA)
 #Sobol analysis
 
 #Base sample size (note it needs two samples of equal size in "sensitivity" package)
-set.seed(1)
+set.seed(5)
 n <- 50000
 
 #Random sampling
@@ -32,8 +32,10 @@ X1 <- X[ind, ]
 X2 <- X[!ind, ]
 
 #Latin Hypercube sampling
-X1 <- data.frame(randomLHS(n,2))
-X2 <- data.frame(randomLHS(n,2))
+X <- data.frame(randomLHS(2*n,2))
+ind <- sample(c(rep(TRUE,n), rep(FALSE,n)), replace=FALSE)
+X1 <- X[ind, ]
+X2 <- X[!ind, ]
 
 #Plot the scatter plot of the samples
 par(mar=c(4,5.1,1.6,2.1))
@@ -58,10 +60,30 @@ legend("topright",lwd=c(2,2),col = c("red","green"),legend = c("X1","X2"),cex=2,
 title(main = "LHS",cex=2)
 
 #Morris method (number of model runs = r*(factors+1))
-M <- morris(model = Reliability, factors = 2, r = 500,
-            design = list(type = "oat", levels = 100, grid.jump = 10))
-print(M)
-#plot(M)
+set.seed(1)
+s1<-rep(NA,100)
+s2<-rep(NA,100)
+for (i in 1:100){
+  r <- i*300
+  M <- morris(model = Reliability, factors = 2, r = r,
+              design = list(type = "oat", levels = 1000, grid.jump = 100))
+  a<-print(M)
+  s1[i] <- a$sigma[1]
+  s2[i] <- a$sigma[2]
+}
+
+#Plot sensitivity index
+par(mar=c(4,5.1,1.6,2.1))
+plot(seq(900,90000,by=900),s2/s1,type="l",lwd=2,xlab="Sample size",ylab="Importance of x2 compared with x1",
+     cex.lab=2,cex.axis=2,ylim=c(0,2.5),col="black")
+title(main = "Morris",cex=2)
+
+par(mar=c(4,5.1,1.6,2.1))
+plot(seq(900,90000,by=900),s1,type="l",lwd=2,xlab="Sample size",ylab="First-order sensitivity index",
+     cex.lab=2,cex.axis=2,ylim=c(0,2.5),col="red")
+lines(seq(900,90000,by=900),s2,lwd=2,col="green")
+legend("topright",lwd=c(2,2),col = c("red","green"),legend = c("X1","X2"),cex=2,bty="n")
+title(main = "Morris",cex=2)
 
 #Plot the scatter plot of the samples
 par(mar=c(4,5.1,1.6,2.1))
