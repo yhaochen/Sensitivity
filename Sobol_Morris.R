@@ -181,6 +181,16 @@ for (i in 1:100){
   s2[i] <- apply(M$ee, 2, sd)[2]
 }
 
+# Plot the first 20 sample trajectories as an example of how Morris method works.
+par(mar=c(4,5.1,1.6,2.1))
+plot(M$X[c(1:60),1],M$X[c(1:60),2],pch=19,cex=1,xlim=c(0,1),ylim=c(0,1),xlab="x1",ylab="x2",cex.lab=2,cex.axis=2)
+# Each line represents an elementary effect
+for (i in 1:20){
+  lines(c(M$X[i*3-2,1],M$X[i*3-1,1]),c(M$X[i*3-2,2],M$X[i*3-1,2]))
+  lines(c(M$X[i*3-1,1],M$X[i*3,1]),c(M$X[i*3-1,2],M$X[i*3,2]))
+}
+title(main = "Morris sampling example",cex=2)
+
 # Plot sensitivity index
 par(mar=c(4,5.1,1.6,2.1))
 plot(seq(r,r*100,by=r),s1,type="l",lwd=2,xlab="Sample size",ylab="Sigma",
@@ -198,12 +208,3 @@ title(main = "Morris",cex=2)
 # Note we don't see the same convergence as in Sobol results, but we can conclude the importances
 #   of X1 and X2 are roughly the same.
 
-# Plot the first 20 sample trajectories as an example of how Morris method works.
-par(mar=c(4,5.1,1.6,2.1))
-plot(M$X[c(1:60),1],M$X[c(1:60),2],pch=19,cex=1,xlim=c(0,1),ylim=c(0,1),xlab="x1",ylab="x2",cex.lab=2,cex.axis=2)
-# Each line represents an elementary effect
-for (i in 1:20){
-  lines(c(M$X[i*3-2,1],M$X[i*3-1,1]),c(M$X[i*3-2,2],M$X[i*3-1,2]))
-  lines(c(M$X[i*3-1,1],M$X[i*3,1]),c(M$X[i*3-1,2],M$X[i*3,2]))
-}
-title(main = "Morris sampling example",cex=2)
