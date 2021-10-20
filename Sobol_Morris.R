@@ -56,11 +56,11 @@ summary(ANOVA)
 # Base sample size (note it needs two samples of equal size in "sensitivity" package)
 # The actual total number of model evaluation is dependent on the exact function (estimator) to use.
 # For sobol() function, total cost is (N+1)*n = 3n (N is the number of input parameters, here is 2)
-set.seed(1)
+
 n <- 50000
 
 # Three sampling choices: choose one to run
-choice <- 1 # 1 or 2 or 3
+choice <- 3 # 1 or 2 or 3
 
 #1. Random MC
 if (choice == 1){
