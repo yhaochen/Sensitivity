@@ -23,9 +23,13 @@ Reliability<-function (X) {
 
 # Plot the response surface of the problem
 x <- seq(0.75,1,by=0.01)
-plot(x,0.75/x,type="l",lwd=2,xlim=c(0,1),ylim=c(0,1),xlab="x1",ylab="x2",cex.lab=1.5,cex.axis=1.5)
+par(mar=c(4,5,2,2))
+plot(x,0.75/x,type="l",lwd=2,xlim=c(0,1),ylim=c(0,1),xlab=expression('x'[1]),
+     ylab=expression('x'[2]),cex.lab=1.5,cex.axis=1.5)
 polygon(c(0.75,1,rev(x)),c(1,1,rev(0.75/x)),col="red",border = NA)
 legend("topleft",legend = c("White = 0", 'Red = 1'),cex = 1.5,bty = "n")
+#title(main="y = 1 if x1x2>0.75",cex=2)
+title(main = expression('y = 1 if x'[1]*'x'[2]*'>0.75'),cex.main=1.5)
 
 #-----------------
 #Simple test with 1000 samples
@@ -57,10 +61,10 @@ summary(ANOVA)
 # The actual total number of model evaluation is dependent on the exact function (estimator) to use.
 # For sobol() function, total cost is (N+1)*n = 3n (N is the number of input parameters, here is 2)
 
-n <- 50000
+n <- 30000
 
 # Three sampling choices: choose one to run
-choice <- 3 # 1 or 2 or 3
+choice <- 1 # 1 or 2 or 3
 
 #1. Random MC
 if (choice == 1){
@@ -102,12 +106,20 @@ title(main = text,cex=2)
 # Set 100 calculations (every 1000 samples)
 # S1 and S2 are first-order indices, S3 is second-order index.
 S1 <- S2 <- S3 <- rep(NA,100)
+S1_up <- S2_up <- S3_up <- rep(NA,100)
+S1_low <- S2_low <- S3_low <- rep(NA,100)
 for (i in 1:100){
   S<-sensitivity::sobol(model = Reliability, X1 = X1[1:(n/100*i), ], X2 = X2[1:(n/100*i), ],
                         order=2, nboot = 100)
   S1[i]<-S$S$original[1]
   S2[i]<-S$S$original[2]
   S3[i]<-S$S$original[3]
+  S1_up[i]<-S$S$`max. c.i.`[1]
+  S2_up[i]<-S$S$`max. c.i.`[2]
+  S3_up[i]<-S$S$`max. c.i.`[3]
+  S1_low[i]<-S$S$`min. c.i.`[1]
+  S2_low[i]<-S$S$`min. c.i.`[2]
+  S3_low[i]<-S$S$`min. c.i.`[3]
 }
 
 # Calculate the theoretical value of first-order Sobol sensitivity index as reference
@@ -140,12 +152,18 @@ S_theoretical <- V1/V
 # Plot Sobol sensitivity index
 par(mar=c(4,5.1,1.6,2.1))
 plot(seq(n/100,n,by=n/100),S1,type="l",lwd=2,xlab="Sample size",ylab="Sobol sensitivity index",
-     cex.lab=2,cex.axis=2,ylim=c(0,1),col="red")
+     cex.lab=2,cex.axis=2,ylim=c(0,1.2),col="red")
 lines(seq(n/100,n,by=n/100),S2,lwd=2,col="green")
 lines(seq(n/100,n,by=n/100),S3,lwd=2,col="blue")
+lines(seq(n/100,n,by=n/100),S1_up,lwd=1,lty=3,col="red")
+lines(seq(n/100,n,by=n/100),S2_up,lwd=1,lty=3,col="green")
+lines(seq(n/100,n,by=n/100),S3_up,lwd=1,lty=3,col="blue")
+lines(seq(n/100,n,by=n/100),S1_low,lwd=1,lty=3,col="red")
+lines(seq(n/100,n,by=n/100),S2_low,lwd=1,lty=3,col="green")
+lines(seq(n/100,n,by=n/100),S3_low,lwd=1,lty=3,col="blue")
 abline(h=S_theoretical,lty=2) # theoretical value of S1 and S2
-legend("topright",lwd=c(2,2,2),col = c("red","green","blue"),
-       legend = c("X1","X2","Interaction"),cex=2,bty="n")
+legend("topright",lwd=c(2,2,2,2,2),lty=c(1,1,1,3,2),col = c("red","green","blue","black","black"),
+       legend = c("X1","X2","Interaction","95% CI","Theoretical value"),cex=1.5,bty="n")
 if (choice == 1)
   text <- "Random MC"
 if (choice == 2)
