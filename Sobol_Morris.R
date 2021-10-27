@@ -18,18 +18,21 @@ library(randtoolbox) #Generate Sobol sequence (Quasi MC)
 #                       return no (0) otherwise
 # Both input samples are distributed uniformly in [0,1]
 Reliability<-function (X) {
-  floor(X[ ,1]*X[ ,2]/0.75)
+  floor(X[ ,1]*X[ ,2]/0.9)
 }
 
 # Plot the response surface of the problem
-x <- seq(0.75,1,by=0.01)
+x <- seq(0.9,1,by=0.001)
 par(mar=c(4,5,2,2))
-plot(x,0.75/x,type="l",lwd=2,xlim=c(0,1),ylim=c(0,1),xlab=expression('x'[1]),
-     ylab=expression('x'[2]),cex.lab=1.5,cex.axis=1.5)
-polygon(c(0.75,1,rev(x)),c(1,1,rev(0.75/x)),col="red",border = NA)
-legend("topleft",legend = c("White = 0", 'Red = 1'),cex = 1.5,bty = "n")
+k=0.036
+plot(x,0.9/x,type="l",lwd=2,xlim=c(k,1-k),ylim=c(k,1-k),xlab=expression('x'[1]),
+     ylab=expression('x'[2]),cex.lab=1.5,cex.axis=1.5,xaxt = "n",yaxt = "n")
+polygon(c(0.9,1,rev(x)),c(1,1,rev(0.9/x)),col="red",border = NA)
+axis(1, at = 0:1,cex.axis=1.5)
+axis(2, at = 0:1,cex.axis=1.5)
+legend("topleft",legend = c("White = 0 (success)", 'Red = 1 (fail)'),cex = 1.5,bty = "n")
 #title(main="y = 1 if x1x2>0.75",cex=2)
-title(main = expression('y = 1 if x'[1]*'x'[2]*'>0.75'),cex.main=1.5)
+title(main = expression('y = 1 if x'[1]*'x'[2]*'>0.9'),cex.main=1.5)
 
 #-----------------
 #Simple test with 1000 samples
@@ -61,7 +64,7 @@ summary(ANOVA)
 # The actual total number of model evaluation is dependent on the exact function (estimator) to use.
 # For sobol() function, total cost is (N+1)*n = 3n (N is the number of input parameters, here is 2)
 
-n <- 30000
+n <- 250000
 
 # Three sampling choices: choose one to run
 choice <- 1 # 1 or 2 or 3
@@ -105,11 +108,12 @@ title(main = text,cex=2)
 # Calculate Sobol sensitivity index under different base sample sizes.
 # Set 100 calculations (every 1000 samples)
 # S1 and S2 are first-order indices, S3 is second-order index.
-S1 <- S2 <- S3 <- rep(NA,100)
-S1_up <- S2_up <- S3_up <- rep(NA,100)
-S1_low <- S2_low <- S3_low <- rep(NA,100)
-for (i in 1:100){
-  S<-sensitivity::sobol(model = Reliability, X1 = X1[1:(n/100*i), ], X2 = X2[1:(n/100*i), ],
+S1 <- S2 <- S3 <- rep(NA,1000)
+S1_up <- S2_up <- S3_up <- rep(NA,1000)
+S1_low <- S2_low <- S3_low <- rep(NA,1000)
+for (i in 1:1000){
+  N = n/1000*i
+  S<-sensitivity::sobol(model = Reliability, X1 = X1[1:N, ], X2 = X2[1:N, ],
                         order=2, nboot = 100)
   S1[i]<-S$S$original[1]
   S2[i]<-S$S$original[2]
@@ -134,7 +138,7 @@ for (i in 1:100){
 #     surface is u:(1-u)
 # u = area of the red region of the response surface = int(1-0.75/x)dx|x~[0.75,1]
 #     where int() represents the integral.
-u <- 0.25-0.75*(log(1)-log(0.75))
+u <- 0.1-0.9*(log(1)-log(0.9))
 # Var(y) = (1-u)*(0-u)^2 + u*(1-u)^2  Here each term represents when y=0 and when y=1
 V <- (1-u)*(0-u)^2 + u*(1-u)^2 
 
@@ -146,24 +150,28 @@ V <- (1-u)*(0-u)^2 + u*(1-u)^2
 # Var(f(x1)) = 0.75*(0-u)^2 + int[(1-0.75/x-u)^2]dx|x~[0.75,1]
 #            = 0.75*u^2 + int[(1-u)^2 - 1.5*(1-u)/x + (0.75/x)^2]dx|x~[0.75,1]
 #            = 0.75*u^2 + 0.25*(1-u)^2 - 1.5*(1-u)*(log(1)-log(0.75)) + 0.75^2*(-1+1/0.75)
-V1 <- 0.75*u^2 + 0.25*(1-u)^2 - 1.5*(1-u)*(log(1)-log(0.75)) + 0.75^2*(-1+1/0.75)
+V1 <- 0.9*u^2 + 0.1*(1-u)^2 - 1.8*(1-u)*(log(1)-log(0.9)) + 0.9^2*(-1+1/0.9)
 S_theoretical <- V1/V
 
 # Plot Sobol sensitivity index
+n=4*n
 par(mar=c(4,5.1,1.6,2.1))
-plot(seq(n/100,n,by=n/100),S1,type="l",lwd=2,xlab="Sample size",ylab="Sobol sensitivity index",
-     cex.lab=2,cex.axis=2,ylim=c(0,1.2),col="red")
-lines(seq(n/100,n,by=n/100),S2,lwd=2,col="green")
-lines(seq(n/100,n,by=n/100),S3,lwd=2,col="blue")
-lines(seq(n/100,n,by=n/100),S1_up,lwd=1,lty=3,col="red")
-lines(seq(n/100,n,by=n/100),S2_up,lwd=1,lty=3,col="green")
-lines(seq(n/100,n,by=n/100),S3_up,lwd=1,lty=3,col="blue")
-lines(seq(n/100,n,by=n/100),S1_low,lwd=1,lty=3,col="red")
-lines(seq(n/100,n,by=n/100),S2_low,lwd=1,lty=3,col="green")
-lines(seq(n/100,n,by=n/100),S3_low,lwd=1,lty=3,col="blue")
-abline(h=S_theoretical,lty=2) # theoretical value of S1 and S2
-legend("topright",lwd=c(2,2,2,2,2),lty=c(1,1,1,3,2),col = c("red","green","blue","black","black"),
-       legend = c("X1","X2","Interaction","95% CI","Theoretical value"),cex=1.5,bty="n")
+plot(seq(n/1000,n,by=n/1000),S1*100,type="l",lwd=2,xlab="Sample size",ylab="Percentage of explained variance (%)",
+     cex.lab=1.5,cex.axis=1.5,ylim=c(-10,110),log="x",col="red",xaxt="n")
+lines(seq(n/1000,n,by=n/1000),S2*100,lwd=2,col="green")
+lines(seq(n/1000,n,by=n/1000),S3*100,lwd=2,col="blue")
+lines(seq(n/1000,n,by=n/1000),S1_up*100,lwd=1,lty=3,col="red")
+lines(seq(n/1000,n,by=n/1000),S2_up*100,lwd=1,lty=3,col="green")
+lines(seq(n/1000,n,by=n/1000),S3_up*100,lwd=1,lty=3,col="blue")
+lines(seq(n/1000,n,by=n/1000),S1_low*100,lwd=1,lty=3,col="red")
+lines(seq(n/1000,n,by=n/1000),S2_low*100,lwd=1,lty=3,col="green")
+lines(seq(n/1000,n,by=n/1000),S3_low*100,lwd=1,lty=3,col="blue")
+axis(1, at = c(1000,10000,100000,1000000),cex.axis=1.5)
+#abline(h=S_theoretical,lty=2) # theoretical value of S1 and S2
+legend(1000,70,lwd=c(2,2,2,2),lty=c(1,1,1,3,2),col = c("red","green","blue","black"),
+       legend = c("X1","X2","Interaction","95% CI"),cex=1.5,bty="n")
+
+
 if (choice == 1)
   text <- "Random MC"
 if (choice == 2)
