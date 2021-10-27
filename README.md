@@ -7,3 +7,5 @@ Sobol_Morris.ipynb is a Jupyter notebook illustration of the code with outputs.
 Sobol_sensobol.R analyzes the same problem with sensobol R package.
 
 Sobol_SALib.py analyzes the same problem with SALib Python library. (this library can only use Saltelli sampling)
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/yhaochen/Sensitivity/HEAD?labpath=Gaussian_process.ipynb)
