@@ -6,6 +6,7 @@
 rm(list = ls())
 graphics.off()
 # load the required libraries
+library(plgp)
 library(mvtnorm)  # Multivariate normal distribution library
 library(lhs) #Generate Latin Hypercube samples
 library(fields) # Make grid plots
