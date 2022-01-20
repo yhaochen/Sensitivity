@@ -11,8 +11,8 @@ library(gstat)
 library(sp)
 
 Reliability<-function (X) {
-  #floor(X[ ,1]*X[ ,2]/0.75)
-  X[ ,1]*X[ ,2]
+  floor(X[ ,1]*X[ ,2]/0.75)
+  #X[ ,1]*X[ ,2]
 }
 
 Kriging <- function (X){

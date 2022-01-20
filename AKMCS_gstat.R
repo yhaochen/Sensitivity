@@ -14,8 +14,9 @@ Reliability<-function (X) {
   #X[ ,1]*X[ ,2]
 }
 thres <- 0.5
-S1_Kriging <- S2_Kriging <- rep(NA,100)
-total_size <- rep (NA,100)
+total_run <- 1
+S1_Kriging <- S2_Kriging <- rep(NA,total_run)
+total_size <- rep (NA,total_run)
 
 Kriging <- function (X){
   coordinates(X) <- ~ X1+X2
@@ -25,7 +26,7 @@ Kriging <- function (X){
 
 set.seed(42)
 #Repeat for many times to get the distribution of sensitivity indices
-total_run <- 1
+
 for (k in 1:total_run){
 level <- seq(0, 1, length=100)
 N <- 10000
