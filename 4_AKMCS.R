@@ -44,13 +44,13 @@ mean<-a$Y_hat
 std<-sqrt(a$MSE)
 U<-(mean-thres)/std
 
-for (i in 1:Step){
+for (i in 1:AKMCS_step){
   start.time <- Sys.time()
   k<-which(U==min(U))
   if (length(k)>1){
     k <- sample(k,1)
   }
-  x_add<-matrix(x_rest[k, ],ncol=d)
+  x_add<-x_rest[k, ]
   x_rest<-x_rest[-k, ]
   y_add<-Reliability(x_add)
   y <- append(y,y_add)
@@ -69,7 +69,7 @@ for (i in 1:Step){
   std<-sqrt(a$MSE)
   U<-(mean-thres)/std
   start.time <- Sys.time()
-  S<-sensitivity::sobol(model = AKMCS, X1 = X1, X2 = X2,
+  S<-sensitivity::sobol(model = Kriging, X1 = X1, X2 = X2,
                         order=1, nboot = 100)
   end.time <- Sys.time()
   time.taken <- difftime(end.time,start.time,units = "secs")
