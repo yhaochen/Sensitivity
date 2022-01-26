@@ -14,4 +14,11 @@ Gaussian_process.R is an illustration example of Gaussian process model fitting.
 
 Similarly, 42D_Sobol.R, 42D_Kriging.R run a 42D test problem.
 
+#####
+Reorganized structure: 
+1_Problem_definition sets the test problem scenario.
+2_Sobol, 3_Kriging, 4_AKMCS run the corresponding method for the test problem.
+5_Time_Dimension records the required computational time for Sobol and Kriging emulator under different dimensions when other conditions are the same.
+6_KrigingTime records the computational time for Kriging emulator under different conditions as well as initial sample size.
+
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/yhaochen/Sensitivity/HEAD?labpath=Gaussian_process.ipynb)
