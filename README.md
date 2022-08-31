@@ -40,15 +40,14 @@ Note 2: Users should expect exactly the same outputs as in "Example_data" folder
 
 ## Reproduce my figures
 
-To replicate the figures, users should use the full outputs in the 'data' folder. 
+To reproduce the figures, users should use the full outputs in the 'data' folder. 
 
 Step 1: Run 6_traceplot.R, and users should see Figure_2 in the "Figures" folder.
 
 Step 2: Run 7_Gridplot.R, and users should see Figure_3 and Figure_4 in the "Figures" folder.
 
 
-#####
-Detailed explanation of each script: 
+## Detailed explanation of each script: 
 
 1_Sobol.R uses the 'sensobol' package to analyze the standard Sobol' analysis.
 
