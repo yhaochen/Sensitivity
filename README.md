@@ -36,7 +36,7 @@ Step 2: Run 2_Kriging.R, 3_BASS.R, 4_AKMCS.R. These three scripts can be run sep
 
 Step 3: Run 5_traceplot_data.R
 
-Note 1: For scripts '2_Kriging.R', '3_BASS.R', '4_AKMCS.R', make sure the parameter 'Check_switch' is 1. This only tests the experiments in 2D and 5D scenarios for these emulation-based methods. Change this parameter to any other numbers in users want to test with the original full experiments (again this takes extremely long). The "1_Sobol.R" is fast enough to run through all the test dimensions.
+Note 1: For scripts '2_Kriging.R', '3_BASS.R', '4_AKMCS.R', make sure the parameter 'Check_switch' is 1. This only tests the experiments in 2D and 5D scenarios for these emulation-based methods. Change this parameter to any other numbers if users want to test with the original full experiments (again this takes extremely long). The "1_Sobol.R" is fast enough to run through all the test dimensions.
 
 Note 2: Users should expect exactly the same outputs as in "Example_data" folder **except for** ave_eval_time files and every files start with "T_" in each subfolder. This is because these files record the computational wall time, which is different based on different machines and random noises. However their relative magnitudes should be still similar.
 
