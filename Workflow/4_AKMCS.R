@@ -58,7 +58,7 @@ for (k in 1:length(D)){
     a$Y_hat
   }
 
-  folder<-paste("/Example_Data/",d,"D/AKMCS",sep="")
+  folder<-paste("Example_Data/",d,"D/AKMCS",sep="")
   dir.create(folder, recursive = TRUE)
 
   # Start recording the time from AKMCS initial state

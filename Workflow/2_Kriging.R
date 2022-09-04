@@ -70,7 +70,7 @@ for (k in 1:length(D)){
   x_test <- randomLHS(20000,d)
   
   # Folder for d dimension test scenario
-  folder <- paste("/Example_Data/",d,"D/Kriging",sep="")
+  folder <- paste("Example_Data/",d,"D/Kriging",sep="")
   dir.create(folder, recursive = TRUE)
   
   # A while loop includes the stopping criterion

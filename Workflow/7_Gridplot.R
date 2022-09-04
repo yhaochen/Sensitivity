@@ -27,7 +27,7 @@ Time_BASS <- matrix(NA,nrow = length(tested_D),ncol = length(tested_eval_time))
 
 # Load all related results for each test scenario
 for (i in 1:length(tested_D)) {
-  folder <- paste("/Data/",tested_D[i],sep="")
+  folder <- paste("Data/",tested_D[i],sep="")
   
   # General:
   load(paste(folder,"/avg_eval_time",sep=""))
@@ -67,10 +67,6 @@ for (i in 1:length(tested_D)) {
 # An adjustment for standard Sobol's time: for fast test models, it is likely the time becomes negative due
 #     to random noises in the time recording.
 Time_Sobol[Time_Sobol < 0] <- Time_Sobol[1,1]
-
-#PercentTime_Kriging <- Time_Sobol/Time_Kriging
-#PercentTime_AKMCS <- Time_Sobol/Time_AKMCS
-#PercentTime_BASS <- Time_Sobol/Time_BASS
 
 # Label of evaluation time
 eval_time_lab <- c("1us","10us","0.1ms","1ms","10ms","0.1s","1s","10s","1min","1h","6h","12h","1d")
@@ -160,155 +156,3 @@ for (i in 1:nrow(Mat)) {
 mtext("Orders of",side = 3, at = 15)
 mtext("magnitude",side = 3, at = 15, line = -1)
 dev.off()
-
-
-
-# Neglect the code below
-
-#----------------------------------------------
-# 
-# # Speed gain compared with brute force method
-# Mat <- T_Sobol/Mat
-# Mat[which(Mat==1)] <- 0.99
-# rownames(Mat)<-tested_D_num
-# colnames(Mat)<-eval_time_lab
-# colfunc <- colorRampPalette(c("white", "blue"))
-# cols<-colfunc(6)
-# breaks<-10^c(0:5)
-# par(mar=c(4,5,2.6,7))
-# plot(Mat[nrow(Mat):1, ],breaks = breaks,col=cols[2:6],
-#      xlab="Time of single run",ylab="Number of input parameters",
-#      cex.lab=1.5,cex.axis=1,main="",fmt.key = "%.0e")
-# mtext('Speed gain', side=3, line=0, at=17.5)
-# 
-# #-------------------
-# #4th panel: speed gain of best method compared with the second best method
-# Mat<-Time_Sobol
-# textMat <- matrix(NA,nrow=nrow(Mat),ncol=ncol(Mat))
-# for (i in 1:nrow(Mat)){
-#   for (j in 1:ncol(Mat)){
-#     vec <- c(Time_Sobol[i,j],Time_Kriging[i,j],Time_AKMCS[i,j],Time_BASS[i,j])
-#     Text <- c("S","K","A","B")
-#     vec <- vec[!is.na(vec)]
-#     r <- order(vec)
-#     Mat[i,j]<-vec[r[2]]/vec[r[1]]
-#     textMat[i,j]<-paste(Text[r[1]],"(",Text[r[2]],")",sep="")
-#   }
-# }
-# Mat <- round(log10(Mat))
-# 
-# rownames(Mat)<-tested_D_num
-# colnames(Mat)<-eval_time_lab
-# colfunc <- colorRampPalette(c("white", "palegreen4"))
-# cols<-colfunc(6)
-# breaks<-c(0:5)
-# par(mar=c(5,5,2.6,5.5))
-# Fast<-plot(Mat[nrow(Mat):1, ],breaks = breaks,col=cols,digits = 1,fmt.cell='%.0f',
-#      xlab="Time of single run",ylab="Number of input parameters",
-#      text.cell=list(pos=3, cex=1),cex.lab=1.5,cex.axis=1,main="",fmt.key = "%.0f")
-# for (i in 1:nrow(Mat)) {
-#   for (j in 1:ncol(Mat)) {  
-#     args<-Fast$cell.text[[nrow(Mat)+1-i,j]]
-#     args$labels <- textMat[i,j]
-#     args$cex    <- 1.5
-#     args$pos    <- 1
-#     do.call(text, args)
-#   }
-# }
-# mtext('Order of magnitude', side=3, line=1, at=16.5)
-# mtext(expression(paste("(",plain("T")[plain("2nd")]," / ",plain("T")[plain("1st")],")")), 
-#       side=3, line=-0.5, at=16.5)
-# 
-# 
-# # Showing the sensitivity results:
-# # Choose the 3rd parameter
-# 
-# i=6
-# folder <- paste("Data/",tested_D[i],sep="")
-# #Load all related variables here and save in Sensitivity
-# # Sensitivity is a 3*4 matrix, each row represents best estimate, low CI and high CI, each column 
-# #   represents a method (Brute force Sobol, Kriging, AKMCS, BASS)
-# Sensitivity<-matrix(NA,nrow = 3,ncol = 4)
-# 
-# #Sobol:
-# load(paste(folder,"/Sobol/S_Sobol",sep=""))
-# Sensitivity[1,1]<-S$results$original[33]
-# Sensitivity[2,1]<-S$results$low.ci[33]
-# Sensitivity[3,1]<-S$results$high.ci[33]
-# 
-# #Kriging:
-# load(paste(folder,"/Kriging/S_Kriging",sep=""))
-# Sensitivity[1,2]<-S_Kriging$results$original[33]
-# Sensitivity[2,2]<-S_Kriging$results$low.ci[33]
-# Sensitivity[3,2]<-S_Kriging$results$high.ci[33]
-# 
-# #BASS:
-# load(paste(folder,"/BASS/S_BASS",sep=""))
-# Sensitivity[1,3]<-mean(S_BASS$T[ ,3])
-# Sensitivity[2,3]<-quantile(S_BASS$T[ ,3],probs = 0.025)
-# Sensitivity[3,3]<-quantile(S_BASS$T[ ,3],probs = 0.975)
-# 
-# #AKMCS:
-# load(paste(folder,"/AKMCS/S_AKMCS",sep=""))
-# Sensitivity[1,4]<-S_AKMCS$results$original[33]
-# Sensitivity[2,4]<-S_AKMCS$results$low.ci[33]
-# Sensitivity[3,4]<-S_AKMCS$results$high.ci[33]
-# 
-# 
-# 
-# # box plots of sensitivity indices for each method
-# cols<-palette(brewer.pal(n = 4, name = "Set3"))
-# par(mar=c(5,5,2.5,2.5))
-# plot(0,0,xlim = c(0,8),ylim = c(0.08,0.14),axes=FALSE,xlab=NA,ylab = "Total-order sensitivity index",cex.lab=1.5)
-# Axis(side=1, labels=FALSE,at=c(1,3,5,7))
-# Axis(side=2, cex.axis=1.5)
-# mtext("Sobol",side = 1,at = 1,cex = 1.5, line = 1.5)
-# mtext("Kriging",side = 1,at = 3,cex = 1.5, line = 1.5)
-# mtext("BASS",side = 1,at = 5,cex = 1.5, line = 1.5)
-# mtext("AKMCS",side = 1,at = 7,cex = 1.5, line = 1.5)
-# for (i in 1:4){
-#   for (j in 1:3){
-#     segments(i*2-1.5,Sensitivity[j,i],i*2-0.5,Sensitivity[j,i],lwd=2,col=cols[i])
-#   }
-#   segments(i*2-1.5,Sensitivity[2,i],i*2-1.5,Sensitivity[3,i],lwd=2,col=cols[i])
-#   segments(i*2-0.5,Sensitivity[2,i],i*2-0.5,Sensitivity[3,i],lwd=2,col=cols[i])
-# }
-
-# #-------------------------------------
-# #Grid plot of Kriging gain
-# Mat = PercentTime_Kriging
-# breaknum <- 10
-# breaks <- c(0.0001,0.001,0.01,0.1,1,10,100,1000,10000,100000) #seq(-0.25,1.75,by=0.25) #
-# cols<-palette(brewer.pal(n = breaknum, name = "RdBu"))
-# rownames(Mat)<-tested_D_num
-# colnames(Mat)<-eval_time_lab
-# par(mar=c(4,5,2.6,7))
-# plot(Mat[nrow(Mat):1, ],breaks = breaks,col=cols[2:10],xlab="Time of single run",ylab="Number of input parameters",
-#      cex.lab=1.5,cex.axis=1,main="",fmt.key = "%+.0e")
-# 
-# #-------------------------------------
-# #Grid plot for AKMCS gain
-# Mat = PercentTime_AKMCS
-# breaknum <- 10
-# breaks <- c(0.0001,0.001,0.01,0.1,1,10,100,1000,10000,100000) #seq(-0.25,1.75,by=0.25) #
-# cols<-palette(brewer.pal(n = breaknum, name = "RdBu"))
-# rownames(Mat)<-tested_D_num
-# colnames(Mat)<-eval_time_lab
-# par(mar=c(4,5,2.6,7))
-# plot(Mat[nrow(Mat):1, ],breaks = breaks,col=cols[2:10],xlab="Time of single run",ylab="Number of input parameters",
-#      cex.lab=1.5,cex.axis=1,main="",fmt.key = "%+.0e")
-# 
-# #-------------------------------------
-# #Grid plot for BASS gain
-# Mat = PercentTime_BASS
-# breaknum <- 8
-# breaks <- c(0.001,0.01,0.1,1,10,100,1000,10000) #seq(-0.25,1.75,by=0.25) #
-# cols<-palette(brewer.pal(n = breaknum, name = "RdBu"))
-# rownames(Mat)<-tested_D_num
-# colnames(Mat)<-eval_time_lab
-# par(mar=c(4,5,2.6,7))
-# plot(Mat[nrow(Mat):1, ],breaks = breaks,col=cols[2:8],xlab="Time of single run",ylab="Number of input parameters",
-#      cex.lab=1.5,cex.axis=1,main="",fmt.key = "%+.0e")
-# 
-# 
-#-------------------------------

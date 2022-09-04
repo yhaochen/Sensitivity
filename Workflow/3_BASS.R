@@ -54,7 +54,7 @@ for (k in 1:length(D)){
   }
   
   # Folder for d dimension test scenario
-  folder <- paste("/Example_Data/",d,"D/BASS",sep="")
+  folder <- paste("Example_Data/",d,"D/BASS",sep="")
   dir.create(file.path(folder), showWarnings = FALSE)
   
   # Use 20,000 LHS training data points to test emulator quality
