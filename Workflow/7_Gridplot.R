@@ -68,6 +68,10 @@ for (i in 1:length(tested_D)) {
 #     to random noises in the time recording.
 Time_Sobol[Time_Sobol < 0] <- Time_Sobol[1,1]
 
+PercentTime_Kriging <- Time_Sobol/Time_Kriging
+PercentTime_AKMCS <- Time_Sobol/Time_AKMCS
+PercentTime_BASS <- Time_Sobol/Time_BASS
+
 # Label of evaluation time
 eval_time_lab <- c("1us","10us","0.1ms","1ms","10ms","0.1s","1s","10s","1min","1h","6h","12h","1d")
 
@@ -94,8 +98,6 @@ for (i in 1:length(tested_D)) {
     }
   }
 }
-# Transform the time to log scale
-Mat <- ceiling(log10(Mat))
 # Row names and column names of the plot
 rownames(textMat) <- tested_D_num
 colnames(textMat) <- eval_time_lab
@@ -134,7 +136,7 @@ for (i in 1:length(tested_D)) {
     Mat[i,j] <- Mat[i,j]/Time_Sobol[1,1]
   }
 }
-Mat <- round(log10(Mat))
+Mat <- floor(log10(Mat))
 rownames(Mat)<-tested_D_num
 colnames(Mat)<-eval_time_lab
 Cols<-palette(brewer.pal(n = 9, name = "Reds"))
