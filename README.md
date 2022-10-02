@@ -25,6 +25,7 @@ Complex models with many parameters and large uncertainties are common in many s
 To be updated
 
 ## Reproduce my experiment
+All the required scripts are in the `workflow` directory.
 
 Running all the scripts will take an extremely long time because the experiments for high-dimensional emulators are slow (this can take up to several weeks). In order to avoid this long waiting time (and the heavy computational burden), we provide an option to reproduce the experiments for low-dimensional models. The scripts in this repo activate this optional low-dimensional test experiment by default. Detailed explanation of how to replicate the experiment is shown below.
 
@@ -36,9 +37,9 @@ Step 1: Run `1_Sobol.R`
 
 Step 2: Run `2_Kriging.R`, `3_BASS.R`, `4_AKMCS.R`. These three scripts can be run separately (if computational condition allows) as they are independent from each other.
 
-Step 3: Run `5_traceplot_data.R`
-
 Note 1: For scripts `2_Kriging.R`, `3_BASS.R`, `4_AKMCS.R`, make sure the parameter 'Check_switch' is 1. This only tests the experiments in 2D and 5D scenarios for these emulation-based methods. Change this parameter to any other numbers if users want to test with the original full experiments (again this takes extremely long). The `1_Sobol.R` is fast enough to run through all the test dimensions.
+
+Step 3: Run `5_traceplot_data.R`
 
 Note 2: Users should expect exactly the same outputs as in `/Example_data` folder **except for** `ave_eval_time` files and every files start with "T_" in each subfolder. This is because these files record the computational wall time, which is different based on different machines and random noises. However their relative magnitudes should be still similar.
 
