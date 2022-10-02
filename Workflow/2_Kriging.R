@@ -70,8 +70,10 @@ for (k in 1:length(D)){
   x_test <- randomLHS(20000,d)
   
   # Folder for d dimension test scenario
-  folder <- paste("Example_Data/",d,"D/Kriging",sep="")
-  dir.create(folder, recursive = TRUE)
+  folder <- paste("./Example_Data/",d,"D/Kriging",sep="")
+  if (!dir.exists(folder)){
+    dir.create(folder, recursive = TRUE)
+  }
   
   # A while loop includes the stopping criterion
   while (1>0){
@@ -109,7 +111,7 @@ for (k in 1:length(D)){
   # Then perform the sensitivity analysis
   # The sample size in sensitivity analysis is directly estimated by the required sample size of the original
   #     model for convenience.
-  load(paste("/Example_Data/Sobol_convergencesize",sep = ""))
+  load(paste("./Example_Data/Sobol_convergencesize",sep = ""))
   N <- Sobol_convergesize[k]/(d+2+d*(d-1)/2)
   
   # Record the time for sensitivity analysis

@@ -45,8 +45,10 @@ for (k in 1:length(D)){
   
   # Folder for d dimension test scenario under the working directory
   # "Data" is the folder that saves all the relevant parameters during the tests
-  folder<-paste("Example_Data/",d,"D",sep="")
-  dir.create(paste(folder,"/Sobol",sep=""), recursive = TRUE)
+  folder<-paste("./Example_Data/",d,"D",sep="")
+  if (!dir.exists(folder)){
+    dir.create(paste(folder,"/Sobol",sep=""), recursive = TRUE)
+  }
   
   # For each considered sample size, perform the Sobol analysis
   for (m in 1:length(tot_size)){

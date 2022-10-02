@@ -58,9 +58,11 @@ for (k in 1:length(D)){
     a$Y_hat
   }
 
-  folder<-paste("Example_Data/",d,"D/AKMCS",sep="")
-  dir.create(folder, recursive = TRUE)
-
+  folder<-paste("./Example_Data/",d,"D/AKMCS",sep="")
+  if (!dir.exists(folder)){
+    dir.create(folder, recursive = TRUE)
+  }
+    
   # Start recording the time from AKMCS initial state
   # AKMCS also begins with 20,000 training samples
   start.time <- Sys.time()
@@ -124,7 +126,7 @@ for (k in 1:length(D)){
   save(T_AKMCS,file = paste(folder,"/T_AKMCS",sep=""))
   
   # Next perform the sensitivity analysis, and again directly get the convergence size of standard Sobol
-  load(paste("/Example_Data/Sobol_convergencesize",sep = ""))
+  load(paste("./Example_Data/Sobol_convergencesize",sep = ""))
   N <- floor(Sobol_convergesize[k]/(d+2+d*(d-1)/2))
   
   # Time for sensitivity analysis

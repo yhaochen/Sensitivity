@@ -16,7 +16,7 @@ library(BASS)
 
 # Plot the results in the example of 5D problem
 d<-5
-folder<-paste("Example_Data/",d,"D",sep="")
+folder<-paste("./Example_Data/",d,"D",sep="")
 
 # Test model in 5D
 Reliability<-function (X) {
@@ -44,7 +44,7 @@ Kriging <- function (X){
 }
 
 # Converged size of the 5D test model
-load("Data/Sobol_convergencesize")
+load("./Data/Sobol_convergencesize")
 N_K <- Sobol_convergesize[2]/(d+2+d*(d-1)/2)
 
 # Sizes used for Sobol trace plot
@@ -145,7 +145,7 @@ for (seed in 1:5){
   save(T_A,file = paste(folder,"/Traceplot/T_A",sep=""))
   
   # BASS method simply takes different initial sample sizes
-  for (i in 1:length(Size_A)){
+  for (i in 1:length(Size_B)){
     X <- randomLHS(Size_B[i], d)
     Y <- apply(X, 1, Reliability)
     mcmc_size <- 500000

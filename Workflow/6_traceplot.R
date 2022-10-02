@@ -21,27 +21,32 @@ Size_A <- seq(13,50,by=1)
 Size_B <- seq(20,115,by=5)
 
 # Load the saved sensitivity indices from script 5
-load("Data/5D/Traceplot/T_S")
-load("Data/5D/Traceplot/T_S_high")
-load("Data/5D/Traceplot/T_S_low")
+load("./Data/5D/Traceplot/T_S")
+load("./Data/5D/Traceplot/T_S_high")
+load("./Data/5D/Traceplot/T_S_low")
 
-load("Data/5D/Traceplot/T_K")
-load("Data/5D/Traceplot/T_B")
-load("Data/5D/Traceplot/T_A")
+load("./Data/5D/Traceplot/T_K")
+load("./Data/5D/Traceplot/T_B")
+load("./Data/5D/Traceplot/T_A")
 
 # Load the convergence size of the 5D test model
-load("Data/Sobol_convergencesize")
+load("./Data/Sobol_convergencesize")
 C_S <- Sobol_convergesize[2]
-load("Data/5D/Kriging/Kriging_size")
+load("./Data/5D/Kriging/Kriging_size")
 C_K <- Kriging_size
-load("Data/5D/AKMCS/x")
+load("./Data/5D/AKMCS/x")
 C_A <- dim(x)[1]
-load("Data/5D/BASS/BASS_size")
+load("./Data/5D/BASS/BASS_size")
 C_B <- sample_size
 
+# Create a folder to save figures
+folder <- "./Figures"
+if (!dir.exists(folder)){
+  dir.create(folder, recursive = TRUE)
+}
 
 # 4 panels of trace plots + 1 line showing convergence locations
-pdf(file = paste("Figures/Figure_2.pdf",sep=""),width = 18,height = 12)
+pdf(file = paste("./Figures/Figure_2.pdf",sep=""),width = 18,height = 12)
 layout(matrix(c(1,2,3,4,5,5), nrow = 3, ncol = 2, byrow = TRUE))
 par(mar=c(4,5,6,2.6))
 plot(Size_S,T_S,type="l",col="seagreen",xlab="Sample size",ylab="Sensitivity",

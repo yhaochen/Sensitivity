@@ -1,4 +1,4 @@
-# This script makes the grid plots (Figure 3 and 4 in the paper)
+# This script makes the supplementary figures
 # Note: this script requires the full data. 
 
 # Remove all existing environment and plots
@@ -75,9 +75,15 @@ PercentTime_BASS <- Time_Sobol/Time_BASS
 # Label of evaluation time
 eval_time_lab <- c("1us","10us","0.1ms","1ms","10ms","0.1s","1s","10s","1min","1h","6h","12h","1d")
 
-#-------------------------------------------------------------
-# Which method to choose? (Figure 3)
-# Identify the fastest method for each scenario
+# Create a folder to save figures
+folder <- "./Figures"
+if (!dir.exists(folder)){
+  dir.create(folder, recursive = TRUE)
+}
+
+#----------------------------------------------
+# 
+# Speed gain compared with brute force Sobol method (Figure S1)
 Mat <- Time_Sobol
 textMat <- matrix(NA,nrow=nrow(Mat),ncol=ncol(Mat))
 for (i in 1:length(tested_D)) {
@@ -85,68 +91,27 @@ for (i in 1:length(tested_D)) {
     Mat[i,j] <- min(Time_Sobol[i,j],Time_Kriging[i,j],
                     Time_AKMCS[i,j],Time_BASS[i,j],na.rm=TRUE)
     if (Mat[i,j]==Time_Sobol[i,j]){
-      textMat[i,j] <- "Sobol"
-    } 
-    if (Mat[i,j]==Time_Kriging[i,j]){
-      textMat[i,j] <- "Kriging"
-    } 
-    if (Mat[i,j]==Time_AKMCS[i,j]){
-      textMat[i,j] <- "AKMCS"
-    } 
-    if (Mat[i,j]==Time_BASS[i,j]){
-      textMat[i,j] <- "BASS"
-    }
-  }
-}
-# Row names and column names of the plot
-rownames(textMat) <- tested_D_num
-colnames(textMat) <- eval_time_lab
-# Color palette
-cols<-palette(brewer.pal(n = 4, name = "Set3"))
-
-# Create a folder to save figures
-folder <- "./Figures"
-if (!dir.exists(folder)){
-  dir.create(folder, recursive = TRUE)
-}
-
-pdf(file = "./Figures/Figure_3.pdf",width = 14,height = 7)
-par(mar=c(5,5,2.6,6))
-plot(textMat[nrow(Mat):1, ],breaks = c("Sobol","Kriging","BASS","AKMCS"),
-     xlab="Time of single run",ylab="Number of input parameters",col=cols,
-     cex.lab=1.5,cex.axis=1,main="")
-dev.off()
-#----------------------------------------------------
-
-# Absolute computational time of this method (Figure 4)
-Mat<-Time_Sobol
-textMat <- matrix(NA,nrow=nrow(Mat),ncol=ncol(Mat))
-for (i in 1:length(tested_D)) {
-  for (j in 1:length(tested_eval_time)){
-    Mat[i,j] <- min(Time_Sobol[i,j],Time_Kriging[i,j],
-                    Time_AKMCS[i,j],Time_BASS[i,j],na.rm=TRUE)
-    if (Mat[i,j]==Time_Sobol[i,j]){
       textMat[i,j] <- "S"
-    }
+    } 
     if (Mat[i,j]==Time_Kriging[i,j]){
       textMat[i,j] <- "K"
-    }
+    } 
     if (Mat[i,j]==Time_AKMCS[i,j]){
       textMat[i,j] <- "A"
-    }
+    } 
     if (Mat[i,j]==Time_BASS[i,j]){
       textMat[i,j] <- "B"
     }
-    Mat[i,j] <- Mat[i,j]/Time_Sobol[1,1]
   }
 }
+Mat <- Time_Sobol/Mat
 Mat <- floor(log10(Mat))
 rownames(Mat)<-tested_D_num
 colnames(Mat)<-eval_time_lab
-Cols<-palette(brewer.pal(n = 9, name = "Reds"))
-pdf(file = "./Figures/Figure_4.pdf",width = 14,height = 7)
+Cols<-palette(brewer.pal(n = 4, name = "Reds"))
+pdf(file = "./Figures/Figure_S1.pdf",width = 14,height = 7)
 par(mar=c(5,5,2.6,6))
-time<-plot(Mat[nrow(Mat):1, ],breaks=c(0:9),digits=1,fmt.cell='%.0f',
+time<-plot(Mat[nrow(Mat):1, ],breaks=c(0:4),digits=1,fmt.cell='%.0f',
            xlab="Time of single run",ylab="Number of input parameters",col=Cols,
            text.cell=list(pos=3, cex=1),max.col=100,
            cex.lab=1.5,cex.axis=1,main="",fmt.key = "%.0f")
@@ -161,4 +126,86 @@ for (i in 1:nrow(Mat)) {
 }
 mtext("Orders of",side = 3, at = 15)
 mtext("magnitude",side = 3, at = 15, line = -1)
+dev.off()
+
+#-------------------
+# speed gain of best method compared with the second best method (Figure S2)
+Mat<-Time_Sobol
+textMat <- matrix(NA,nrow=nrow(Mat),ncol=ncol(Mat))
+for (i in 1:nrow(Mat)){
+  for (j in 1:ncol(Mat)){
+    vec <- c(Time_Sobol[i,j],Time_Kriging[i,j],Time_AKMCS[i,j],Time_BASS[i,j])
+    Text <- c("S","K","A","B")
+    vec <- vec[!is.na(vec)]
+    r <- order(vec)
+    Mat[i,j]<-vec[r[2]]/vec[r[1]]
+    textMat[i,j]<-paste(Text[r[1]],"(",Text[r[2]],")",sep="")
+  }
+}
+Mat <- floor(log10(Mat))
+rownames(Mat)<-tested_D_num
+colnames(Mat)<-eval_time_lab
+Cols<-palette(brewer.pal(n = 4, name = "Reds"))
+pdf(file = "./Figures/Figure_S2.pdf",width = 14,height = 7)
+par(mar=c(5,5,2.6,5.5))
+Fast<-plot(Mat[nrow(Mat):1, ],breaks = c(0:4),col=Cols,digits = 1,fmt.cell='%.0f',
+     xlab="Time of single run",ylab="Number of input parameters",
+     text.cell=list(pos=3, cex=1),cex.lab=1.5,cex.axis=1,main="",fmt.key = "%.0f")
+for (i in 1:nrow(Mat)) {
+  for (j in 1:ncol(Mat)) {
+    args<-Fast$cell.text[[nrow(Mat)+1-i,j]]
+    args$labels <- textMat[i,j]
+    args$cex    <- 1.5
+    args$pos    <- 1
+    do.call(text, args)
+  }
+}
+mtext('Order of magnitude', side=3, line=1, at=15)
+mtext(expression(paste("(",plain("T")[plain("2nd")]," / ",plain("T")[plain("1st")],")")),
+      side=3, line=-0.5, at=15)
+dev.off()
+
+#-------------------------------------
+#Grid plot of Kriging gain
+Mat = floor(log10(PercentTime_Kriging))
+Cols<-palette(brewer.pal(n = 12, name = "RdYlGn"))
+rownames(Mat)<-tested_D_num
+colnames(Mat)<-eval_time_lab
+pdf(file = "./Figures/Figure_S3.pdf",width = 14,height = 7)
+par(mar=c(4,5,2.6,7))
+plot(Mat[nrow(Mat):1, ],breaks = c(-7:4),col=Cols,xlab="Time of single run",
+     ylab="Number of input parameters",digits = 1,fmt.cell='%.0f',max.col=100,
+     cex.lab=1.5,cex.axis=1,main="",fmt.key = "%+.0f")
+mtext('Order of magnitude', side=3, line=1, at=15)
+mtext('Speed gain of Kriging',side=3, line=-0.5, at=15)
+dev.off()
+
+#-------------------------------------
+#Grid plot of AKMCS gain
+Mat = floor(log10(PercentTime_AKMCS))
+Cols<-palette(brewer.pal(n = 11, name = "RdYlGn"))
+rownames(Mat)<-tested_D_num
+colnames(Mat)<-eval_time_lab
+pdf(file = "./Figures/Figure_S4.pdf",width = 14,height = 7)
+par(mar=c(4,5,2.6,7))
+plot(Mat[nrow(Mat):1, ],breaks = c(-8:4),col=c("orangered4",Cols),xlab="Time of single run",
+     ylab="Number of input parameters",digits = 1,fmt.cell='%.0f',max.col=100,
+     cex.lab=1.5,cex.axis=1,main="",fmt.key = "%+.0f")
+mtext('Order of magnitude', side=3, line=1, at=15)
+mtext('Speed gain of AKMCS',side=3, line=-0.5, at=15)
+dev.off()
+
+#-------------------------------------
+#Grid plot of BASS gain
+Mat = floor(log10(PercentTime_BASS))
+Cols<-palette(brewer.pal(n = 8, name = "RdYlGn"))
+rownames(Mat)<-tested_D_num
+colnames(Mat)<-eval_time_lab
+pdf(file = "./Figures/Figure_S5.pdf",width = 14,height = 7)
+par(mar=c(4,5,2.6,7))
+plot(Mat[nrow(Mat):1, ],breaks = c(-4:4),col=Cols,xlab="Time of single run",
+     ylab="Number of input parameters",digits = 1,fmt.cell='%.0f',max.col=100,
+     cex.lab=1.5,cex.axis=1,main="",fmt.key = "%+.0f")
+mtext('Order of magnitude', side=3, line=1, at=15)
+mtext('Speed gain of BASS',side=3, line=-0.5, at=15)
 dev.off()
