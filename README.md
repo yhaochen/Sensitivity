@@ -45,7 +45,7 @@ Note 2: Users should expect exactly the same outputs as in `/Example_data` folde
 
 ## Reproduce my figures
 
-To reproduce the figures, users should use the full outputs in the `/data` folder. Users should see the same figures as the example figures (with _orig in their names so that users won't overlap them) provided in the `/Figures` folder. This would make the comparison easier.
+To reproduce the figures, users should use the full outputs in the `/data` folder. Users should see the same figures as the example figures (with _orig in their names so that users won't overlap them) provided in the `/Figures` folder. This prevents users from overwriting the figures so that the comparison is easier.
 
 Step 1: Run `6_traceplot.R`, and users should see Figure_2 in the `/Figures` folder.
 
