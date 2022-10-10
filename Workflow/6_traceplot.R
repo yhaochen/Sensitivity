@@ -18,7 +18,7 @@ Size_K <- seq(20,80,by=2)
 # Sizes used for AKMCS traceplot
 Size_A <- seq(13,50,by=1)
 # Sizes used for BASS traceplot
-Size_B <- seq(20,115,by=5)
+Size_B <- seq(20,100,by=5)
 
 # Load the saved sensitivity indices from script 5
 load("./Data/5D/Traceplot/T_S")

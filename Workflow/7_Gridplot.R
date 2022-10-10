@@ -102,7 +102,7 @@ for (i in 1:length(tested_D)) {
 rownames(textMat) <- tested_D_num
 colnames(textMat) <- eval_time_lab
 # Color palette
-cols<-palette(brewer.pal(n = 4, name = "Set3"))
+cols<-brewer.pal(n = 4, name = "Set3")
 
 # Create a folder to save figures
 folder <- "./Figures"
@@ -143,7 +143,7 @@ for (i in 1:length(tested_D)) {
 Mat <- floor(log10(Mat))
 rownames(Mat)<-tested_D_num
 colnames(Mat)<-eval_time_lab
-Cols<-palette(brewer.pal(n = 9, name = "Reds"))
+Cols<-brewer.pal(n = 9, name = "Reds")
 pdf(file = "./Figures/Figure_4.pdf",width = 14,height = 7)
 par(mar=c(5,5,2.6,6))
 time<-plot(Mat[nrow(Mat):1, ],breaks=c(0:9),digits=1,fmt.cell='%.0f',

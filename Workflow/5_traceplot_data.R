@@ -16,7 +16,7 @@ library(BASS)
 
 # Plot the results in the example of 5D problem
 d<-5
-folder<-paste("./Example_Data/",d,"D",sep="")
+folder<-paste("./Data/",d,"D",sep="")
 
 # Test model in 5D
 Reliability<-function (X) {
@@ -83,7 +83,7 @@ Size_A <- seq(13,50,by=1)
 T_A <- matrix(NA,nrow=5,ncol=length(Size_A))
 
 # Sizes used for BASS traceplot
-Size_B <- seq(20,115,by=5)
+Size_B <- seq(20,100,by=5)
 T_B <- matrix(NA,nrow=5,ncol=length(Size_B))
 
 # Test for 5 seeds for the emulation methods
