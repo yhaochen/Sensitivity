@@ -16,7 +16,7 @@ library(BASS)
 
 # Plot the results in the example of 5D problem
 d<-5
-folder<-paste("./Data/",d,"D",sep="")
+folder<-paste("./Example_Data/",d,"D",sep="")
 
 # Test model in 5D
 Reliability<-function (X) {
