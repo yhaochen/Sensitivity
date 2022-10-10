@@ -98,8 +98,8 @@ for (k in 1:length(D)){
 # Finally, save the convergence size of each model dimension into a vector
 Sobol_convergesize <- rep(NA,length(D))
 for (i in 1:length(D)) {
-  folder <- paste("/Example_Data/",D[i],"D/Sobol",sep="")
+  folder <- paste("./Example_Data/",D[i],"D/Sobol",sep="")
   load(paste(folder,"/S_Sobol",sep=""))
   Sobol_convergesize[i] <- S$C
 }
-save(Sobol_convergesize,file = "/Example_Data/Sobol_convergencesize")
+save(Sobol_convergesize,file = "./Example_Data/Sobol_convergencesize")
