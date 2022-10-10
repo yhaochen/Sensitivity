@@ -47,10 +47,13 @@ Note 2: Users should expect exactly the same outputs as in `/Example_data` folde
 
 To reproduce the figures, users should use the full outputs in the `/data` folder. 
 
-Step 1: `Run 6_traceplot.R`, and users should see Figure_2 in the `/Figures` folder.
+Step 1: Run `6_traceplot.R`, and users should see Figure_2 in the `/Figures` folder.
 
-Step 2: `Run 7_Gridplot.R`, and users should see Figure_3 and Figure_4 in the `/Figures` folder.
+Step 2: Run `7_Gridplot.R`, and users should see Figure_3 and Figure_4 in the `/Figures` folder.
 
+Step 3: Run `8_Supplementary.R`, and users should see Figure_S1, Figure_S2, Figure_S3 and Figure_S4 in the `/Figures` folder.
+
+Note: these four figures are in the supplementary materials.
 
 ## Detailed explanation of each script: 
 
@@ -68,4 +71,4 @@ Step 2: `Run 7_Gridplot.R`, and users should see Figure_3 and Figure_4 in the `/
 
 `7_Gridplot.R` makes the figure 3 and 4 in the paper.
 
-
+`8_Supplementary.R` makes the supplementary figures in the supplementary materials.
