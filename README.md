@@ -41,7 +41,9 @@ Note 1: For scripts `2_Kriging.R`, `3_BASS.R`, `4_AKMCS.R`, make sure the parame
 
 Step 3: Run `5_traceplot_data.R`
 
-Note 2: Users should expect exactly the same outputs as in `/Example_data` folder **except for** `ave_eval_time` files and every files start with "T_" in each subfolder. This is because these files record the computational wall time, which is different based on different machines and random noises. However their relative magnitudes should be still similar.
+Note 2: Users should expect exactly the same outputs as in `/Example_data` folder **except for** `ave_eval_time` files and every files start with "T_" in each subfolder. This is because these files record the computational wall time, which is different based on different machines and random noises. However their relative magnitudes should be still similar. 
+
+Note 3: Even testing with the 5D example problem, `5_traceplot_data.R` could still take about 6~7 hours to run.
 
 ## Reproduce my figures
 
