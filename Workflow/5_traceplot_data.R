@@ -16,7 +16,7 @@ library(BASS)
 
 # Plot the results in the example of 5D problem
 d<-5
-folder<-paste("./Example_Data/",d,"D",sep="")
+folder<-paste("./Data/",d,"D",sep="")
 
 # Test model in 5D
 Reliability<-function (X) {
@@ -55,7 +55,7 @@ T_S_high <-rep(NA, length(Size_S))
 T_S_low <- rep(NA, length(Size_S))
 T_S <- rep(NA, length(Size_S))
 
-# Evaluate the results of the standard Sobol method
+#Evaluate the results of the standard Sobol method
 for (i in 1:length(Size_S)){
   N <- floor(Size_S[i]/(d+2+d*(d-1)/2))
   mat <- sobol_matrices(N = N, params = as.character(c(1:d)), order = "second")
@@ -65,7 +65,7 @@ for (i in 1:length(Size_S)){
                      boot=TRUE,R=100,order="second")
   T_S_high[i] <- S$results$high.ci[8]
   T_S_low[i] <- S$results$low.ci[8]
-  
+
   T_S[i] <- S$results$original[8]
 }
 save(T_S,file = paste(folder,"/Traceplot/T_S",sep=""))
@@ -74,16 +74,16 @@ save(T_S_low,file = paste(folder,"/Traceplot/T_S_low",sep=""))
 
 # Sizes used for Kriging traceplot
 # 5 different seeds for the emulation methods
-Size_K <- seq(20,80,by=2)
+Size_K <- seq(2,80,by=2)
 # Total-order indices
 T_K <- matrix(NA,nrow=5,ncol=length(Size_K))
 
 # Sizes used for AKMCS traceplot
-Size_A <- seq(13,50,by=1)
+Size_A <- seq(5,50,by=1)
 T_A <- matrix(NA,nrow=5,ncol=length(Size_A))
 
 # Sizes used for BASS traceplot
-Size_B <- seq(20,100,by=5)
+Size_B <- seq(2,100,by=2)
 T_B <- matrix(NA,nrow=5,ncol=length(Size_B))
 
 # Test for 5 seeds for the emulation methods
@@ -110,7 +110,7 @@ for (seed in 1:5){
   candidate_size <- 20000
   X <- randomLHS(candidate_size,d)
   # Begin with 12 initial samples
-  n_init<-12
+  n_init <- 12
   indx <- sample(candidate_size,n_init)
   x <- X[indx, ]
   x_rest <- X[-indx, ]
@@ -123,7 +123,7 @@ for (seed in 1:5){
   # Take the next sample adaptively, repeat these steps
   for (i in 1:length(Size_A)){
     k<-which(U==max(U))
-    if (length(k)>1){
+   if (length(k)>1){
       k <- sample(k,1)
     }
     x_add<-x_rest[k, ]

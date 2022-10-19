@@ -81,13 +81,64 @@ if (!dir.exists(folder)){
   dir.create(folder, recursive = TRUE)
 }
 
+#--------------------------------------
+# Errors in sensitivity index of each method
+
+# Sizes used for standard Sobol traceplot
+Size_S <- c(seq(40,1000,by=40),seq(1000,100000,by=1000))
+# Sizes used for Kriging traceplot
+Size_K <- seq(2,80,by=2)
+# Sizes used for AKMCS traceplot
+Size_A <- seq(5,50,by=1)
+# Sizes used for BASS traceplot
+Size_B <- seq(2,100,by=2)
+
+# Load the saved sensitivity indices from script 5
+load("./Data/5D/Traceplot/T_S")
+load("./Data/5D/Traceplot/T_S_high")
+load("./Data/5D/Traceplot/T_S_low")
+
+load("./Data/5D/Traceplot/T_K")
+load("./Data/5D/Traceplot/T_B")
+load("./Data/5D/Traceplot/T_A")
+
+# Load the convergence size of the 5D test model
+load("./Data/Sobol_convergencesize")
+C_S <- Sobol_convergesize[2]
+load("./Data/5D/Kriging/Kriging_size")
+C_K <- Kriging_size
+load("./Data/5D/AKMCS/x")
+C_A <- dim(x)[1]
+load("./Data/5D/BASS/BASS_size")
+C_B <- sample_size
+
+# Error in sensitivity index 
+# For standard Sobol, take the last result (when converged) as the "true" result
+# For emulation-based models, take the mean of 5 random seeds as the result under each sample size.
+E_K <- colMeans(T_K) - T_S[length(T_S)]
+E_A <- colMeans(T_A) - T_S[length(T_S)]
+E_B <- colMeans(T_B) - T_S[length(T_S)]
+pdf(file = "./Figures/Figure_S1.pdf",width = 11,height = 7)
+par(mar=c(5,5,2.6,3))
+plot(Size_K,E_K,type="l",col="purple",lwd=1.5,xlab="Sample size",
+     ylab = "Error in sensitivity index",xlim = c(min(c(Size_A,Size_B,Size_K)),max(c(Size_A,Size_B,Size_K))),
+     ylim = c(min(c(E_A,E_B,E_K)),max(c(E_A,E_B,E_K))),cex.lab=1.5,cex.axis=1.5)
+lines(Size_B,E_B,col="red",lwd=1.5)
+lines(Size_A,E_A,col="blue",lwd=1.5)
+abline(h = 0, lty=2,lwd=0.5)
+legend("bottomright",lty=c(1,1,1),lwd=c(1.5,1.5,1.5),col=c("purple","blue","red"),bty="n",
+       legend = c("Kriging","AKMCS","BASS"),cex=1.5)
+dev.off()
+
+
+
 #-------------------------------------
 #Grid plot of Kriging gain
 Mat = floor(log10(PercentTime_Kriging))
-Cols<-brewer.pal(n = 12, name = "RdYlGn")
+Cols<-brewer.pal(n = 11, name = "RdYlGn")
 rownames(Mat)<-tested_D_num
 colnames(Mat)<-eval_time_lab
-pdf(file = "./Figures/Figure_S1.pdf",width = 14,height = 7)
+pdf(file = "./Figures/Figure_S2.pdf",width = 14,height = 7)
 par(mar=c(5,5,2.6,7))
 plot(Mat[nrow(Mat):1, ],breaks = c(-7:4),col=Cols,xlab="Time of single run",
      ylab="Number of input parameters",digits = 1,fmt.cell='%.0f',max.col=100,
@@ -102,7 +153,7 @@ Mat = floor(log10(PercentTime_AKMCS))
 Cols<-brewer.pal(n = 11, name = "RdYlGn")
 rownames(Mat)<-tested_D_num
 colnames(Mat)<-eval_time_lab
-pdf(file = "./Figures/Figure_S2.pdf",width = 14,height = 7)
+pdf(file = "./Figures/Figure_S3.pdf",width = 14,height = 7)
 par(mar=c(5,5,2.6,7))
 plot(Mat[nrow(Mat):1, ],breaks = c(-8:4),col=c("orangered4",Cols),xlab="Time of single run",
      ylab="Number of input parameters",digits = 1,fmt.cell='%.0f',max.col=100,
@@ -117,7 +168,7 @@ Mat = floor(log10(PercentTime_BASS))
 Cols<-brewer.pal(n = 8, name = "RdYlGn")
 rownames(Mat)<-tested_D_num
 colnames(Mat)<-eval_time_lab
-pdf(file = "./Figures/Figure_S3.pdf",width = 14,height = 7)
+pdf(file = "./Figures/Figure_S4.pdf",width = 14,height = 7)
 par(mar=c(5,5,2.6,7))
 plot(Mat[nrow(Mat):1, ],breaks = c(-4:4),col=Cols,xlab="Time of single run",
      ylab="Number of input parameters",digits = 1,fmt.cell='%.0f',max.col=100,
@@ -154,7 +205,7 @@ Mat <- floor(log10(Mat))
 rownames(Mat)<-tested_D_num
 colnames(Mat)<-eval_time_lab
 Cols<-brewer.pal(n = 4, name = "Reds")
-pdf(file = "./Figures/Figure_S4.pdf",width = 14,height = 7)
+pdf(file = "./Figures/Figure_S5.pdf",width = 14,height = 7)
 par(mar=c(5,5,2.6,6))
 time<-plot(Mat[nrow(Mat):1, ],breaks=c(0:4),digits=1,fmt.cell='%.0f',
            xlab="Time of single run",ylab="Number of input parameters",col=Cols,
@@ -191,11 +242,11 @@ Mat <- floor(log10(Mat))
 rownames(Mat)<-tested_D_num
 colnames(Mat)<-eval_time_lab
 Cols<-brewer.pal(n = 4, name = "Reds")
-pdf(file = "./Figures/Figure_S5.pdf",width = 14,height = 7)
+pdf(file = "./Figures/Figure_S6.pdf",width = 14,height = 7)
 par(mar=c(5,5,2.6,5.5))
 Fast<-plot(Mat[nrow(Mat):1, ],breaks = c(0:4),col=Cols,digits = 1,fmt.cell='%.0f',
-           xlab="Time of single run",ylab="Number of input parameters",
-           text.cell=list(pos=3, cex=1),cex.lab=1.5,cex.axis=1,main="",fmt.key = "%.0f")
+     xlab="Time of single run",ylab="Number of input parameters",
+     text.cell=list(pos=3, cex=1),cex.lab=1.5,cex.axis=1,main="",fmt.key = "%.0f")
 for (i in 1:nrow(Mat)) {
   for (j in 1:ncol(Mat)) {
     args<-Fast$cell.text[[nrow(Mat)+1-i,j]]
@@ -210,4 +261,4 @@ mtext(expression(paste("(",plain("T")[plain("2nd")]," / ",plain("T")[plain("1st"
       side=3, line=-0.5, at=15)
 dev.off()
 
-
+#-----------------------
