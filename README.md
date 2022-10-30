@@ -27,9 +27,15 @@ To be updated
 ## Reproduce my experiment
 Clone the entire repository to a local working location.
 
-All the required scripts can be found in the `workflow` directory. `working_directory.sh` is a bash file used to set up your own working directory (the location you clone to). Run the scripts by calling this bash file: 
+All the required scripts can be found in the `workflow` directory. `working_directory.sh` is a bash file used to set up your own working directory (the location you clone to). Run the scripts by calling this bash file (change XXX to your working directory): 
 
-sh working_directory.sh "XXX"
+```sh working_directory.sh "XXX"```
+
+If you want to run single script: open the bash file and add "#" before the scripts you want to skip.
+
+Another way to setup the working directory is by directly changing the "dir" variable in each script. Simply replace commandArgs(trailingOnly=TRUE) by "XXX" (change XXX to your working directory).
+
+```dir <- commandArgs(trailingOnly=TRUE)```
 
 Running all the scripts will take an extremely long time because the experiments for high-dimensional emulators are slow (this can take up to several weeks). In order to avoid this long waiting time (and the heavy computational burden), we provide an option to reproduce the experiments for low-dimensional models. The scripts in this repo activate this optional low-dimensional test experiment by default. Detailed explanation of how to replicate the experiment is shown below.
 
