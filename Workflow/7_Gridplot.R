@@ -6,7 +6,7 @@ rm(list = ls())
 graphics.off()
 
 # Set a working directory, please set it to your own working folder when testing
-dir <- "/storage/work/h/hxy46/Sensitivity"
+dir <- commandArgs(trailingOnly=TRUE)
 setwd(dir = dir)
 
 # Load the required packages
