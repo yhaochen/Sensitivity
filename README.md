@@ -25,7 +25,11 @@ Complex models with many parameters and large uncertainties are common in many s
 To be updated
 
 ## Reproduce my experiment
-All the required scripts are in the `workflow` directory.
+Clone the entire repository to a local working location.
+
+All the required scripts can be found in the `workflow` directory. `working_directory.sh` is a bash file used to set up your own working directory (the location you clone to). Run the scripts by calling this bash file: 
+
+sh working_directory.sh "XXX"
 
 Running all the scripts will take an extremely long time because the experiments for high-dimensional emulators are slow (this can take up to several weeks). In order to avoid this long waiting time (and the heavy computational burden), we provide an option to reproduce the experiments for low-dimensional models. The scripts in this repo activate this optional low-dimensional test experiment by default. Detailed explanation of how to replicate the experiment is shown below.
 
