@@ -87,11 +87,11 @@ if (!dir.exists(folder)){
 # Sizes used for standard Sobol traceplot
 Size_S <- c(seq(40,1000,by=40),seq(1000,100000,by=1000))
 # Sizes used for Kriging traceplot
-Size_K <- seq(2,80,by=2)
+Size_K <- c(2:10,seq(12,80,by=2))
 # Sizes used for AKMCS traceplot
-Size_A <- seq(5,50,by=1)
+Size_A <- c(3:50)
 # Sizes used for BASS traceplot
-Size_B <- seq(2,100,by=2)
+Size_B <- c(2:10,seq(12,100,by=2))
 
 # Load the saved sensitivity indices from script 5
 load("./Data/5D/Traceplot/T_S")

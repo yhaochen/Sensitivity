@@ -74,16 +74,17 @@ save(T_S_low,file = paste(folder,"/Traceplot/T_S_low",sep=""))
 
 # Sizes used for Kriging traceplot
 # 5 different seeds for the emulation methods
-Size_K <- seq(2,80,by=2)
+Size_K <- c(2:10,seq(12,80,by=2))
+
 # Total-order indices
 T_K <- matrix(NA,nrow=5,ncol=length(Size_K))
 
 # Sizes used for AKMCS traceplot
-Size_A <- seq(5,50,by=1)
+Size_A <- c(3:50)
 T_A <- matrix(NA,nrow=5,ncol=length(Size_A))
 
 # Sizes used for BASS traceplot
-Size_B <- seq(2,100,by=2)
+Size_B <- c(2:10,seq(12,100,by=2))
 T_B <- matrix(NA,nrow=5,ncol=length(Size_B))
 
 # Test for 5 seeds for the emulation methods
